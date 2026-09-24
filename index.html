@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>점프 Up! 꿈 Up!! 구영 명랑 운동회</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 귀여운 무료 폰트 (Jua & Gamja Flower) 불러오기 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 기본 폰트 및 배경 설정 */
+        body {
+            font-family: 'Jua', sans-serif;
+            background: linear-gradient(135deg, #fef08a 0%, #bae6fd 50%, #fbcfe8 100%);
+            overscroll-behavior: none;
+            min-height: 100vh;
+        }
+
+        /* 앱 컨테이너 모바일 최적화 */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 통통 튀는 3D 버튼 효과 */
+        .btn-bouncy {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 0px rgba(0, 0, 0, 0.15), 0 15px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-bouncy:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0px rgba(0, 0, 0, 0.15), 0 8px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 핀치 줌 이미지 뷰포트 컨테이너 */
+        .zoom-container {
+            width: 100%;
+            height: 58vh;
+            overflow: hidden;
+            border: 3px solid #fde047;
+            border-radius: 1.5rem;
+            position: relative;
+            background-color: #fefce8;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 줌 적용 이미지 */
+        .zoomable-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transform-origin: center center;
+            will-change: transform;
+            transition: transform 0.05s linear;
+        }
+
+        /* 귀여운 디지털 시계 스타일 */
+        .digital-clock {
+            font-family: 'Jua', monospace;
+            background: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 2px solid #3b82f6;
+            color: #1d4ed8;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        /* 명랑 운동회 국기 만장 장식 스타일 */
+        .flag-banner {
+            background-image: repeating-linear-gradient(45deg, #ef4444 0 15px, #3b82f6 15px 30px, #eab308 30px 45px, #22c55e 45px 60px);
+            height: 8px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+<div class="app-container">
+    <!-- 알록달록 가랜드 장식 띠 -->
+    <div class="flag-banner"></div>
+
+    <!-- 헤더 영역 -->
+    <header class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 text-white p-4 text-center rounded-b-3xl shadow-lg relative border-b-4 border-blue-600">
+        <!-- 뒤로가기 버튼 -->
+        <button id="btn-back" onclick="goHome()" class="hidden absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full font-bold text-lg backdrop-blur-sm transition active:scale-95">
+            👈 뒤로
+        </button>
+
+        <!-- 타이틀 제목 -->
+        <div class="inline-block bg-white/10 px-3 py-1 rounded-full text-yellow-200 text-xs font-bold tracking-widest mb-1 backdrop-blur-sm">
+            🎈 2026 구영초등학교 학생자치축제 🎈
+        </div>
+        <h1 class="text-2xl font-extrabold tracking-wide leading-tight drop-shadow-md">
+            점프 Up! 꿈 Up!!<br>
+            <span class="text-yellow-300 text-3xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">구영 명랑 운동회</span>
+        </h1>
+        
+        <!-- 공유 버튼 -->
+        <button onclick="shareApp()" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-yellow-400 hover:bg-yellow-300 text-amber-900 rounded-full p-2.5 shadow-md active:scale-90 transition border-2 border-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 24 24">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+            </svg>
+        </button>
+    </header>
+
+    <!-- 홈 화면 -->
+    <main id="view-home" class="flex-1 flex flex-col items-center justify-between p-5 space-y-4">
+        <!-- 메인 캐치프레이즈 & 캐릭터 일러스트 -->
+        <div class="w-full flex-1 flex flex-col items-center justify-center my-auto py-2">
+            <div class="relative group w-full flex justify-center items-center px-2">
+                <div class="absolute inset-2 bg-gradient-to-r from-pink-300 via-yellow-200 to-sky-300 rounded-3xl blur-md opacity-40 transform scale-95"></div>
+                <img src="image_492e69.png" alt="운동회 캐릭터" class="relative w-full max-w-[330px] h-auto object-contain drop-shadow-xl transform hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://placehold.co/320x240/fef08a/3b82f6?text=구영+명랑+운동회';">
+            </div>
+            <p class="text-sky-600 text-sm font-bold bg-sky-50/90 backdrop-blur-sm px-5 py-2 rounded-full border border-sky-200 mt-4 shadow-sm">
+                🏃‍♀️ 모두 다 함께 신나고 즐겁게! 🏃‍♂️
+            </p>
+        </div>
+        
+        <!-- 부서 선택 버튼 그룹 -->
+        <div class="w-full space-y-4 mb-4">
+            <!-- 1부 버튼 -->
+            <button onclick="openPart(1)" class="btn-bouncy w-full bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 hover:from-amber-300 hover:to-red-300 text-white font-extrabold py-5 px-6 rounded-3xl border-2 border-white flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <span class="text-4xl bg-white/20 p-2 rounded-2xl group-hover:rotate-12 transition">🥇</span>
+                    <div class="text-left">
+                        <span class="text-2xl block tracking-wide text-yellow-100 drop-shadow">1부 (1~3학년)</span>
+                        <span class="text-xs text-white/90 font-medium"> 경기 배치도 & 프로그램</span>
+                    </div>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">➔</span>
+            </button>
+
+            <!-- 2부 버튼 -->
+            <button onclick="openPart(2)" class="btn-bouncy w-full bg-gradient-to-r from-emerald-400 via-teal-500 to-sky-500 hover:from-emerald-300 hover:to-sky-400 text-white font-extrabold py-5 px-6 rounded-3xl border-2 border-white flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <span class="text-4xl bg-white/20 p-2 rounded-2xl group-hover:-rotate-12 transition">🏆</span>
+                    <div class="text-left">
+                        <span class="text-2xl block tracking-wide text-emerald-100 drop-shadow">2부 (4~6학년)</span>
+                        <span class="text-xs text-white/90 font-medium"> 경기 배치도 & 프로그램</span>
+                    </div>
+                </div>
+                <span class="text-2xl group-hover:translate-x-1 transition">➔</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- 상세 내용 화면 -->
+    <main id="view-content" class="hidden flex-1 flex flex-col p-4">
+        <!-- 상단 서브 헤더 (타이틀 + 현재 시각) -->
+        <div class="flex justify-between items-center mb-3 bg-gradient-to-r from-amber-100 to-orange-100 p-3 rounded-2xl border border-amber-200 shadow-sm">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl" id="part-icon">🎪</span>
+                <h2 id="part-title" class="text-xl font-extrabold text-amber-900 tracking-wide">1부 (1~3학년)</h2>
+            </div>
+            <div class="text-right flex items-center space-x-2">
+                <span class="text-sm text-amber-900 font-extrabold tracking-tight">⏰ 현재 시각</span>
+                <span id="realtime-clock" class="digital-clock text-2xl font-bold pb-1">00:00:00</span>
+            </div>
+        </div>
+
+        <!-- 3가지 메뉴 탭 버튼 -->
+        <div class="flex w-full mb-3 bg-gray-100 rounded-2xl p-1.5 shadow-inner border border-gray-200 space-x-1">
+            <button onclick="switchTab('tab-layout')" id="btn-tab-layout" class="flex-1 py-2.5 text-lg tracking-tighter font-bold rounded-xl transition duration-200 text-gray-500">
+                🗺️ 운동장 배치표
+            </button>
+            <button onclick="switchTab('tab-schedule')" id="btn-tab-schedule" class="flex-1 py-2.5 text-lg tracking-tighter font-bold rounded-xl transition duration-200 text-gray-500">
+                📋 프로그램 운영표
+            </button>
+            <button onclick="switchTab('tab-timetable')" id="btn-tab-timetable" class="flex-1 py-2.5 text-lg tracking-tighter font-bold rounded-xl transition duration-200 text-gray-500">
+                ⏱️ 일과 운영표
+            </button>
+        </div>
+
+        <!-- 터치 안내 뱃지 및 리셋 버튼 -->
+        <div class="flex justify-between items-center bg-sky-50 px-3.5 py-2 rounded-2xl mb-2.5 border border-sky-100 shadow-sm">
+            <span class="text-xs font-bold text-sky-700 flex items-center gap-1">
+                👉 핀치(두 손가락)로 확대/축소, 드래그 이동
+            </span>
+            <button onclick="resetZoom()" class="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white text-xs px-3 py-1 rounded-xl shadow font-bold transition">
+                🔄 원위치
+            </button>
+        </div>
+
+        <!-- 이미지 표시 터치 감지 영역 -->
+        <div class="zoom-container" id="image-scroll-container">
+            <!-- 대체 플레이스홀더 -->
+            <div id="image-placeholder" class="hidden flex items-center justify-center h-full text-gray-400 text-center p-4">
+                이미지가 없습니다.
+            </div>
+            <!-- 실제 표시 이미지 -->
+            <img id="display-image" src="" alt="운동회 안내 이미지" class="zoomable-image">
+        </div>
+    </main>
+
+</div>
+
+<script>
+    // 앱 상태 관리 변수
+    let currentPart = 1;
+    let currentTab = 'tab-layout';
+
+    // 핀치 줌 & 팬 변수
+    let scale = 1;
+    let minScale = 1;
+    let maxScale = 4;
+    let pointX = 0;
+    let pointY = 0;
+    let startX = 0;
+    let startY = 0;
+    let initialDistance = 0;
+    let initialScale = 1;
+    let isPanning = false;
+    let lastTap = 0;
+
+    // 이미지 경로 설정 데이터
+    const imagesData = {
+        1: {
+            'tab-layout': '운동장 배치도(1부).png',
+            'tab-schedule': 'image_3e24b2.png',
+            'tab-timetable': 'https://placehold.co/600x800/fef08a/3b82f6?text=1%EB%B6%80+%EC%9D%BC%EA%B3%BC%EC%9A%B4%EC%98%81%ED%91%9C'
+        },
+        2: {
+            'tab-layout': '운동장 배치도(2부).png',
+            'tab-schedule': 'image_3e277b.png',
+            'tab-timetable': 'https://placehold.co/600x800/fef08a/3b82f6?text=2%EB%B6%80+%EC%9D%BC%EA%B3%BC%EC%9A%B4%EC%98%81%ED%91%9C'
+        }
+    };
+
+    // 시계 갱신 로직
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        const clockEl = document.getElementById('realtime-clock');
+        if (clockEl) {
+            clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 메인 홈 이동
+    function goHome() {
+        document.getElementById('view-home').classList.remove('hidden');
+        document.getElementById('view-content').classList.add('hidden');
+        document.getElementById('btn-back').classList.add('hidden');
+    }
+
+    // 1부 / 2부 선택 시
+    function openPart(partNumber) {
+        currentPart = partNumber;
+        const titleText = partNumber === 1 ? '1부 (1~3학년)' : '2부 (4~6학년)';
+        const iconText = partNumber === 1 ? '🥇' : '🏆';
+        
+        document.getElementById('part-title').textContent = titleText;
+        document.getElementById('part-icon').textContent = iconText;
+        
+        document.getElementById('view-home').classList.add('hidden');
+        document.getElementById('view-content').classList.remove('hidden');
+        document.getElementById('btn-back').classList.remove('hidden');
+
+        switchTab('tab-layout');
+    }
+
+    // 탭 전환 핸들러
+    function switchTab(tabId) {
+        currentTab = tabId;
+
+        // 모든 탭 스타일 초기화
+        const tabs = ['tab-layout', 'tab-schedule', 'tab-timetable'];
+        tabs.forEach(id => {
+            const btn = document.getElementById(`btn-${id}`);
+            if (btn) {
+                btn.className = "flex-1 py-2.5 text-lg tracking-tighter font-bold rounded-xl transition duration-200 text-gray-500 hover:text-gray-700";
+            }
+        });
+
+        // 활성화된 탭 스타일 지정
+        const activeBtn = document.getElementById(`btn-${tabId}`);
+        if (activeBtn) {
+            activeBtn.className = "flex-1 py-2.5 text-lg tracking-tighter font-extrabold rounded-xl transition duration-200 bg-white text-blue-600 shadow-md border border-blue-100 scale-105";
+        }
+
+        // 이미지 전환
+        const imgSrc = imagesData[currentPart][tabId];
+        const imgElement = document.getElementById('display-image');
+        const placeholder = document.getElementById('image-placeholder');
+
+        if (imgSrc) {
+            imgElement.src = imgSrc;
+            imgElement.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            
+            imgElement.onerror = function() {
+                this.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                placeholder.innerHTML = `<div class="text-center p-3"><p class="font-bold text-red-500 mb-1">📷 이미지를 준비 중입니다.</p><p class="text-xs text-gray-500">폴더에 <b>${imgSrc}</b> 파일이 있는지 확인해 주세요.</p></div>`;
+            };
+        } else {
+            imgElement.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            placeholder.innerHTML = "등록된 이미지가 없습니다.";
+        }
+
+        resetZoom();
+    }
+
+    // Transform 업데이트
+    function setTransform() {
+        const img = document.getElementById('display-image');
+        if (!img) return;
+        img.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    }
+
+    // 줌 리셋
+    function resetZoom() {
+        scale = 1;
+        pointX = 0;
+        pointY = 0;
+        setTransform();
+    }
+
+    // 모바일 핀치 줌 / 드래그 / 더블탭 바인딩
+    window.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('image-scroll-container');
+        if (!container) return;
+
+        container.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const now = Date.now();
+                if (now - lastTap < 300) {
+                    if (scale > 1) {
+                        resetZoom();
+                    } else {
+                        scale = 2.5;
+                        pointX = 0;
+                        pointY = 0;
+                        setTransform();
+                    }
+                    lastTap = 0;
+                    return;
+                }
+                lastTap = now;
+
+                if (scale > 1) {
+                    isPanning = true;
+                    startX = e.touches[0].clientX - pointX;
+                    startY = e.touches[0].clientY - pointY;
+                }
+            } else if (e.touches.length === 2) {
+                isPanning = false;
+                initialDistance = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                initialScale = scale;
+            }
+        }, { passive: false });
+
+        container.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+
+            if (e.touches.length === 1 && isPanning && scale > 1) {
+                pointX = e.touches[0].clientX - startX;
+                pointY = e.touches[0].clientY - startY;
+                setTransform();
+            } else if (e.touches.length === 2) {
+                const dist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                if (initialDistance > 0) {
+                    const newScale = initialScale * (dist / initialDistance);
+                    scale = Math.min(Math.max(newScale, minScale), maxScale);
+                    if (scale === 1) {
+                        pointX = 0;
+                        pointY = 0;
+                    }
+                    setTransform();
+                }
+            }
+        }, { passive: false });
+
+        container.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                initialDistance = 0;
+            }
+            if (e.touches.length === 0) {
+                isPanning = false;
+            }
+        });
+    });
+
+    // 공유하기 함수
+    function shareApp() {
+        if (navigator.share) {
+            navigator.share({
+                title: '점프 Up! 꿈 Up!! 구영 명랑 운동회',
+                text: '구영초 명랑 운동회 배치표와 순서를 확인하세요!',
+                url: window.location.href
+            }).catch((err) => console.log('공유 실패:', err));
+        } else {
+            const url = window.location.href;
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = url;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('🎉 어플 주소가 복사되었습니다! 카카오톡 등에 공유해보세요.');
+        }
+    }
+</script>
+</body>
+</html>
