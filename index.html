@@ -113,7 +113,7 @@
         
         <!-- 중앙 귀여운 캐릭터 이미지 (mix-blend-multiply 적용하여 흰 배경 투명화 효과) -->
         <div class="w-full max-w-[330px] flex-1 flex items-center justify-center mb-6 z-10">
-            <img src="image_492e69.png" alt="운동회 캐릭터" class="w-full h-auto drop-shadow-2xl animate-bounce mix-blend-multiply" style="animation-duration: 2.5s;">
+            <img src="image_654b9c.png" alt="운동회 캐릭터" class="w-full h-auto drop-shadow-2xl animate-bounce mix-blend-multiply" style="animation-duration: 2.5s;">
         </div>
 
         <!-- 1부, 2부 선택 버튼 (버튼 크기와 글자 크기 극대화) -->
@@ -194,169 +194,10 @@
             1: {
                 'tab-layout': '운동장 배치도(1부).png',
                 'tab-schedule': 'image_3e24b2.png',
-                'tab-timetable': 'image_5a71bc.png'
+                'tab-timetable': 'image_5a71bc_2.png'
             },
             2: {
                 'tab-layout': '운동장 배치도(2부).png',
                 'tab-schedule': 'image_3e277b.png',
-                'tab-timetable': 'image_5a74a5.png'
+                'tab-timetable': 'image_5a74a5_2.png'
             }
-        };
-
-        // -------------------------
-        // 화면 이동 및 탭 변경 기능
-        // -------------------------
-        function selectPart(part) {
-            currentPart = part;
-            // 홈 화면 숨기고 상세 화면 보이기
-            document.getElementById('home-screen').classList.add('hidden');
-            document.getElementById('detail-screen').classList.remove('hidden');
-            document.getElementById('detail-screen').classList.add('flex');
-            
-            // 제목 변경
-            document.getElementById('part-title').innerText = part === 1 ? '1부' : '2부';
-            
-            // 기본 탭을 '운동장 배치표'로 초기화
-            changeTab('tab-layout');
-        }
-
-        function goBack() {
-            // 상세 화면 숨기고 홈 화면 보이기
-            document.getElementById('detail-screen').classList.add('hidden');
-            document.getElementById('detail-screen').classList.remove('flex');
-            document.getElementById('home-screen').classList.remove('hidden');
-            resetZoom();
-        }
-
-        function changeTab(tabId) {
-            currentTab = tabId;
-            
-            // 모든 탭 버튼을 회색(비활성화)으로 변경
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-white', 'shadow-md', 'text-blue-600', 'border-blue-500');
-                btn.classList.add('text-gray-500', 'border-transparent');
-            });
-            // 선택된 탭만 파란색(활성화)으로 변경
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            activeBtn.classList.remove('text-gray-500', 'border-transparent');
-            activeBtn.classList.add('bg-white', 'shadow-md', 'text-blue-600', 'border-blue-500');
-
-            // 이미지 소스 변경
-            const imgElement = document.getElementById('content-image');
-            imgElement.src = imagesData[currentPart][currentTab];
-            
-            resetZoom();
-        }
-
-        // -------------------------
-        // 시계 기능
-        // -------------------------
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('current-time').innerText = `${hours}:${minutes}:${seconds}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // -------------------------
-        // 공유하기 기능
-        // -------------------------
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({
-                    title: '구영 명랑 운동회',
-                    text: '점프 Up! 꿈 Up!! 구영 명랑 운동회 일정 및 배치도를 스마트폰으로 확인하세요!',
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert('앱 주소가 복사되었습니다! 카카오톡이나 밴드에 붙여넣기 해주세요.');
-            }
-        }
-
-        // -------------------------
-        // 핀치 줌 (손가락 확대/축소) & 드래그 기능 (모바일 완벽 호환)
-        // -------------------------
-        const container = document.getElementById('image-container');
-        const img = document.getElementById('content-image');
-        
-        let scale = 1;
-        let panning = false;
-        let pointX = 0; let pointY = 0;
-        let startX = 0; let startY = 0;
-        let initialDistance = 0; let initialScale = 1;
-        let lastTap = 0;
-
-        function setTransform() {
-            // 확대 시 화면 밖으로 이미지가 너무 많이 나가지 않도록 경계 설정
-            const maxPanX = (scale - 1) * container.clientWidth;
-            const maxPanY = (scale - 1) * container.clientHeight;
-            
-            if(pointX > maxPanX) pointX = maxPanX;
-            if(pointX < -maxPanX) pointX = -maxPanX;
-            if(pointY > maxPanY) pointY = maxPanY;
-            if(pointY < -maxPanY) pointY = -maxPanY;
-
-            img.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
-        }
-
-        function resetZoom() {
-            scale = 1;
-            pointX = 0;
-            pointY = 0;
-            img.style.transform = `translate(0px, 0px) scale(1)`;
-        }
-
-        function getDistance(touches) {
-            return Math.hypot(
-                touches[0].clientX - touches[1].clientX,
-                touches[0].clientY - touches[1].clientY
-            );
-        }
-
-        container.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            
-            // 더블 탭 확대/축소
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            if (e.touches.length === 1 && tapLength < 300 && tapLength > 0) {
-                if (scale > 1) { resetZoom(); } 
-                else { scale = 2.5; setTransform(); }
-            }
-            lastTap = currentTime;
-
-            if (e.touches.length === 2) {
-                panning = false;
-                initialDistance = getDistance(e.touches);
-                initialScale = scale;
-            } else if (e.touches.length === 1 && scale > 1) {
-                panning = true;
-                startX = e.touches[0].clientX - pointX;
-                startY = e.touches[0].clientY - pointY;
-            }
-        }, { passive: false });
-
-        container.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (e.touches.length === 2) {
-                const currentDistance = getDistance(e.touches);
-                scale = Math.min(Math.max(1, initialScale * (currentDistance / initialDistance)), 4);
-                setTransform();
-            } else if (e.touches.length === 1 && panning && scale > 1) {
-                pointX = e.touches[0].clientX - startX;
-                pointY = e.touches[0].clientY - startY;
-                setTransform();
-            }
-        }, { passive: false });
-
-        container.addEventListener('touchend', () => {
-            panning = false;
-        });
-
-    </script>
-</body>
-</html>
